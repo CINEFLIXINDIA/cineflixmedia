@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>670718371497-tfuru4flr3l0vuvubgkb4pft7p22npbk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.670718371497-tfuru4flr3l0vuvubgkb4pft7p22npbk</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>670718371497-b00albu9bv2lr5osuibdri7a5p7ppdki.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDX0q_CMY0nya368K_2qn3X-kF2QbmjtR8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>670718371497</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.cineflixmedia.app</string>
+	<key>PROJECT_ID</key>
+	<string>cineflix-media-c5f46</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cineflix-media-c5f46.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:670718371497:ios:8d0a8491ce432c3835abb8</string>
+</dict>
+</plist>
