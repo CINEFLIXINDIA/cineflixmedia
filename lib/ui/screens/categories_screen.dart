@@ -10,173 +10,123 @@ class CategoriesScreen extends StatelessWidget {
 
   static Map<String, dynamic> _getCategoryTheme(String slug, bool isDark) {
     final s = slug.toLowerCase();
-    if (s.contains('bollywood')) {
+    if (s.contains('trailer') || s.contains('premieres') || s.contains('video')) {
+      // Fiery Orange
       return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF380E23), Color(0xFF1E0713), Color(0xFF0C0308)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFFF0F5), Color(0xFFFFDEE9)],
-              ),
-        'accent': const Color(0xFFFF1493),
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFF5722), Color(0xFFF4511E), Color(0xFFBF360C)],
+        ),
+        'accent': const Color(0xFFFFAB40),
+        'icon': Icons.play_circle_fill_rounded,
+        'badgeGradient': const [Color(0xFFFFAB40), Color(0xFFFF3D00)],
+      };
+    } else if (s.contains('ott') || s.contains('series')) {
+      // Electric Blue
+      return {
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF2563EB), Color(0xFF1D4ED8), Color(0xFF1E3A8A)],
+        ),
+        'accent': const Color(0xFF60A5FA),
+        'icon': Icons.tv_rounded,
+        'badgeGradient': const [Color(0xFF38BDF8), Color(0xFF1D4ED8)],
+      };
+    } else if (s.contains('theatre') || s.contains('drama')) {
+      // Deep Crimson / Magenta
+      return {
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFE11D48), Color(0xFFBE123C), Color(0xFF881337)],
+        ),
+        'accent': const Color(0xFFFB7185),
+        'icon': Icons.theater_comedy_rounded,
+        'badgeGradient': const [Color(0xFFFB7185), Color(0xFFBE123C)],
+      };
+    } else if (s.contains('interview') || s.contains('podcast')) {
+      // Bright Cyan / Teal
+      return {
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF06B6D4), Color(0xFF0891B2), Color(0xFF0E7490)],
+        ),
+        'accent': const Color(0xFF67E8F9),
+        'icon': Icons.mic_rounded,
+        'badgeGradient': const [Color(0xFF22D3EE), Color(0xFF0891B2)],
+      };
+    } else if (s.contains('bollywood')) {
+      // Hot Magenta / Neon Pink
+      return {
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFFF1493), Color(0xFFD81B60), Color(0xFF880E4F)],
+        ),
+        'accent': const Color(0xFFFF4081),
         'icon': Icons.movie_filter_rounded,
         'badgeGradient': const [Color(0xFFA30849), Color(0xFFFF0871)],
       };
     } else if (s.contains('music')) {
+      // Electric Violet / Purple
       return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF320E3D), Color(0xFF1B0721), Color(0xFF0C0310)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFBF0FF), Color(0xFFF1DEFF)],
-              ),
-        'accent': const Color(0xFFD946EF),
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFA855F7), Color(0xFF7C3AED), Color(0xFF4C1D95)],
+        ),
+        'accent': const Color(0xFFE879F9),
         'icon': Icons.music_note_rounded,
         'badgeGradient': const [Color(0xFF9333EA), Color(0xFFC084FC)],
       };
-    } else if (s.contains('theatre') || s.contains('drama')) {
-      return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF381014), Color(0xFF1F080A), Color(0xFF0F0304)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFFF1F2), Color(0xFFFFE4E6)],
-              ),
-        'accent': const Color(0xFFF43F5E),
-        'icon': Icons.theater_comedy_rounded,
-        'badgeGradient': const [Color(0xFFBE123C), Color(0xFFFB7185)],
-      };
-    } else if (s.contains('ott') || s.contains('series')) {
-      return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF0F1E38), Color(0xFF08101F), Color(0xFF03070F)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFEFF6FF), Color(0xFFDBEAFE)],
-              ),
-        'accent': const Color(0xFF3B82F6),
-        'icon': Icons.tv_rounded,
-        'badgeGradient': const [Color(0xFF1D4ED8), Color(0xFF60A5FA)],
-      };
     } else if (s.contains('review')) {
+      // Neon Emerald Green
       return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF0D2E2B), Color(0xFF071A18), Color(0xFF030D0C)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFF0FDF4), Color(0xFFDCFCE7)],
-              ),
-        'accent': const Color(0xFF10B981),
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF10B981), Color(0xFF059669), Color(0xFF064E3B)],
+        ),
+        'accent': const Color(0xFF34D399),
         'icon': Icons.rate_review_rounded,
         'badgeGradient': const [Color(0xFF047857), Color(0xFF34D399)],
       };
-    } else if (s.contains('trailer') || s.contains('premieres') || s.contains('video')) {
-      return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF3A180D), Color(0xFF200D07), Color(0xFF0F0603)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFFF7ED), Color(0xFFFFEDD5)],
-              ),
-        'accent': const Color(0xFFF97316),
-        'icon': Icons.play_circle_fill_rounded,
-        'badgeGradient': const [Color(0xFFC2410C), Color(0xFFFB923C)],
-      };
     } else if (s.contains('talent') || s.contains('star')) {
+      // Golden Amber
       return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF382A0D), Color(0xFF1F1707), Color(0xFF0F0B03)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFEFCE8), Color(0xFFFEF08A)],
-              ),
-        'accent': const Color(0xFFEAB308),
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFFF59E0B), Color(0xFFD97706), Color(0xFF78350F)],
+        ),
+        'accent': const Color(0xFFFDE047),
         'icon': Icons.star_rounded,
         'badgeGradient': const [Color(0xFFA16207), Color(0xFFFACC15)],
       };
-    } else if (s.contains('interview') || s.contains('podcast')) {
-      return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF102A36), Color(0xFF08171E), Color(0xFF040B0F)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFECFEFF), Color(0xFFCFFAFE)],
-              ),
-        'accent': const Color(0xFF06B6D4),
-        'icon': Icons.mic_rounded,
-        'badgeGradient': const [Color(0xFF0E7490), Color(0xFF22D3EE)],
-      };
     } else if (s.contains('award') || s.contains('event')) {
+      // Royal Amethyst
       return {
-        'gradient': isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF2E0F38), Color(0xFF1A0820), Color(0xFF0D0410)],
-              )
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFFFAF5FF), Color(0xFFF3E8FF)],
-              ),
-        'accent': const Color(0xFFA855F7),
+        'gradient': const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9), Color(0xFF3B0764)],
+        ),
+        'accent': const Color(0xFFC4B5FD),
         'icon': Icons.emoji_events_rounded,
         'badgeGradient': const [Color(0xFF7E22CE), Color(0xFFC084FC)],
       };
     }
+    // Fallback: Vivid Sapphire
     return {
-      'gradient': isDark
-          ? const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF14243B), Color(0xFF0B1422), Color(0xFF050A12)],
-            )
-          : const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFFF8FAFC), Color(0xFFE2E8F0)],
-            ),
-      'accent': const Color(0xFF0095FF),
+      'gradient': const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8), Color(0xFF172554)],
+      ),
+      'accent': const Color(0xFF93C5FD),
       'icon': Icons.explore_rounded,
       'badgeGradient': const [Color(0xFF0284C7), Color(0xFF38BDF8)],
     };
