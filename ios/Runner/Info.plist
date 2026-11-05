@@ -94,6 +94,8 @@
 	<string>CineFlix Media needs access to your photo library to select an author profile picture.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>CineFlix Media needs access to your camera to take an author profile picture.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>CineFlix Media requires microphone access when capturing videos or audio for media playback.</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-4390946365152897~4337089346</string>
 	<key>SKAdNetworkItems</key>
