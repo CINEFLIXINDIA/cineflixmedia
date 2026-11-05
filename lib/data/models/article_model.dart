@@ -17,6 +17,10 @@ class ArticleModel {
   final String? author;
   final String status;
   final int views;
+  final int commentsCount;
+  final double averageRating;
+  final int totalRatings;
+  final int? userRating;
 
   const ArticleModel({
     required this.id,
@@ -32,6 +36,10 @@ class ArticleModel {
     this.author,
     this.status = 'published',
     this.views = 0,
+    this.commentsCount = 0,
+    this.averageRating = 0.0,
+    this.totalRatings = 0,
+    this.userRating,
   });
 
   /// Normalizes image URL to always be fully qualified
@@ -101,6 +109,35 @@ class ArticleModel {
       authorName = json['author'].toString();
     }
 
+    int commentsCount = 0;
+    if (json['comments_count'] is int) {
+      commentsCount = json['comments_count'];
+    } else if (json['comments_count'] != null) {
+      commentsCount = int.tryParse(json['comments_count'].toString()) ?? 0;
+    }
+
+    double averageRating = 0.0;
+    if (json['average_rating'] is num) {
+      averageRating = (json['average_rating'] as num).toDouble();
+    } else if (json['average_rating'] != null) {
+      averageRating =
+          double.tryParse(json['average_rating'].toString()) ?? 0.0;
+    }
+
+    int totalRatings = 0;
+    if (json['total_ratings'] is int) {
+      totalRatings = json['total_ratings'];
+    } else if (json['total_ratings'] != null) {
+      totalRatings = int.tryParse(json['total_ratings'].toString()) ?? 0;
+    }
+
+    int? userRating;
+    if (json['user_rating'] is int) {
+      userRating = json['user_rating'];
+    } else if (json['user_rating'] != null) {
+      userRating = int.tryParse(json['user_rating'].toString());
+    }
+
     return ArticleModel(
       id: id,
       title: title,
@@ -115,6 +152,10 @@ class ArticleModel {
       author: authorName ?? AppConstants.defaultAuthor,
       status: json['status']?.toString() ?? 'published',
       views: int.tryParse(json['views']?.toString() ?? '0') ?? 0,
+      commentsCount: commentsCount,
+      averageRating: averageRating,
+      totalRatings: totalRatings,
+      userRating: userRating,
     );
   }
 
@@ -134,6 +175,10 @@ class ArticleModel {
       'updated_at': updatedAt,
       'author': author,
       'views': views,
+      'comments_count': commentsCount,
+      'average_rating': averageRating,
+      'total_ratings': totalRatings,
+      'user_rating': userRating,
     };
   }
 
@@ -194,6 +239,10 @@ class ArticleModel {
     String? author,
     String? status,
     int? views,
+    int? commentsCount,
+    double? averageRating,
+    int? totalRatings,
+    int? userRating,
   }) {
     return ArticleModel(
       id: id ?? this.id,
@@ -209,6 +258,10 @@ class ArticleModel {
       author: author ?? this.author,
       status: status ?? this.status,
       views: views ?? this.views,
+      commentsCount: commentsCount ?? this.commentsCount,
+      averageRating: averageRating ?? this.averageRating,
+      totalRatings: totalRatings ?? this.totalRatings,
+      userRating: userRating ?? this.userRating,
     );
   }
 
