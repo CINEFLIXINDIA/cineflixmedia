@@ -55,11 +55,11 @@ class NewsRepository {
     );
   }
 
-  /// Fetches featured / sticky articles
-  Future<List<ArticleModel>> getFeaturedNews({int perPage = 6}) async {
+  /// Fetches website-driven hero articles (Single source of truth from Website Hero)
+  Future<List<ArticleModel>> getFeaturedNews({int perPage = 5}) async {
     final response = await _apiClient.get(
-      ApiEndpoints.postsFilters,
-      queryParameters: {'featured': 1, 'per_page': perPage},
+      ApiEndpoints.postsHero,
+      queryParameters: {'per_page': perPage},
     );
 
     final paginated = PaginatedResponse<ArticleModel>.fromJson(

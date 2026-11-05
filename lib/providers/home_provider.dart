@@ -63,10 +63,8 @@ class HomeProvider extends ChangeNotifier {
       _breakingNews = _latestNews.take(5).toList();
 
       final featured = results[1] as List<ArticleModel>;
-      // If featured list is empty, fallback to first 5 latest
-      _featuredNews = featured.isNotEmpty
-          ? featured
-          : _latestNews.take(5).toList();
+      // Website Hero is single source of truth - direct assignment
+      _featuredNews = featured;
 
       final fetchedCategories = results[2] as List<CategoryModel>;
       fetchedCategories.sort((a, b) {
@@ -125,9 +123,8 @@ class HomeProvider extends ChangeNotifier {
 
       _breakingNews = _latestNews.take(5).toList();
       final featured = results[1] as List<ArticleModel>;
-      _featuredNews = featured.isNotEmpty
-          ? featured
-          : _latestNews.take(5).toList();
+      // Website Hero is single source of truth - direct assignment
+      _featuredNews = featured;
       final fetchedCategories = results[2] as List<CategoryModel>;
       fetchedCategories.sort((a, b) {
         if (a.order != b.order) {

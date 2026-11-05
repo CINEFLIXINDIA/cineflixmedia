@@ -4,6 +4,7 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   static const String posts = '${AppConstants.apiBaseUrl}/posts';
+  static const String postsHero = '${AppConstants.apiBaseUrl}/posts/hero';
   static const String postsFilters = '${AppConstants.apiBaseUrl}/posts/filters';
   static const String search = '${AppConstants.apiBaseUrl}/search';
   static const String categories = '${AppConstants.apiBaseUrl}/categories';
