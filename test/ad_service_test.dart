@@ -7,6 +7,7 @@ void main() {
 
   group('Google Mobile Ads Configuration & Service Tests (iOS & Android)', () {
     test('Exact iOS AdMob Unit IDs are configured correctly', () {
+      expect(AdConstants.prodIosAppId, 'ca-app-pub-4390946365152897~4337089346');
       expect(AdConstants.prodIosAppOpenAdId, 'ca-app-pub-4390946365152897/2006439474');
       expect(AdConstants.prodIosBannerAdId, 'ca-app-pub-4390946365152897/1287032984');
       expect(AdConstants.prodIosInterstitialAdId, 'ca-app-pub-4390946365152897/6927593665');

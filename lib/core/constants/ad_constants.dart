@@ -17,6 +17,7 @@ class AdConstants {
   // ---------------------------------------------------------------------------
   // iOS Production Ad Units (CineFlix Media)
   // ---------------------------------------------------------------------------
+  static const String prodIosAppId = 'ca-app-pub-4390946365152897~4337089346';
   static const String prodIosAppOpenAdId = 'ca-app-pub-4390946365152897/2006439474';
   static const String prodIosBannerAdId = 'ca-app-pub-4390946365152897/1287032984';
   static const String prodIosInterstitialAdId = 'ca-app-pub-4390946365152897/6927593665';
