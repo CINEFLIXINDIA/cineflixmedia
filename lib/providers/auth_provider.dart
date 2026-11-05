@@ -245,7 +245,8 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     } catch (e) {
-      _errorMessage = 'Apple sign-in error: $e';
+      final str = e.toString().replaceFirst('Exception: ', '').trim();
+      _errorMessage = str;
       _isLoading = false;
       notifyListeners();
       return false;

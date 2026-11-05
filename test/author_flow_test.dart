@@ -37,6 +37,11 @@ void main() {
       expect(result.authorizationCode, 'auth-code-123');
     });
 
+    test('AppleAuthService client ID and redirect URI configuration are valid', () {
+      expect(AppleAuthService.appleClientId, 'com.cineflixmedia.app.service');
+      expect(AppleAuthService.appleRedirectUri, 'https://cineflixmedia.in/api/v1/auth/apple/callback');
+    });
+
     test('AuthorModel and Dashboard data deserialize accurately from backend JSON', () {
       final json = {
         'author': {
