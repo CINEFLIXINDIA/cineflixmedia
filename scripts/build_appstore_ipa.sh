@@ -46,6 +46,16 @@ if [ -f "$IPA_FILE" ]; then
     echo "Signing Verification:"
     codesign -dvvv --entitlements :- "$ARCHIVE_PATH/Products/Applications/Runner.app" 2>&1 | grep -E "Authority|TeamIdentifier|Identifier|com.apple.developer" || true
     echo "=================================================="
+
+    DEST_CONTENT_DIR="/Volumes/Macintosh 2/CineFlix Media/App Content"
+    if [ -d "$DEST_CONTENT_DIR" ]; then
+        echo ""
+        echo "Copying archive and IPA to $DEST_CONTENT_DIR..."
+        cp -R "$ARCHIVE_PATH" "$DEST_CONTENT_DIR/"
+        cp "$IPA_FILE" "$DEST_CONTENT_DIR/"
+        echo "Successfully copied to $DEST_CONTENT_DIR/"
+        echo "=================================================="
+    fi
 else
     echo "ERROR: IPA file not generated in $IPA_DIR"
     exit 1
