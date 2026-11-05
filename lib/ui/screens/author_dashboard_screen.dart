@@ -39,12 +39,11 @@ class _AuthorDashboardScreenState extends State<AuthorDashboardScreen> {
   }
 
   void _navigateToDashboard() {
-    MainNavigationScreen.switchToTab(0);
-    Navigator.of(context).pushAndRemoveUntil(
+    Navigator.push(
+      context,
       MaterialPageRoute(
-        builder: (_) => const MainNavigationScreen(initialIndex: 0),
+        builder: (_) => const AuthorDashboardScreen(showOverview: true),
       ),
-      (route) => false,
     );
   }
 

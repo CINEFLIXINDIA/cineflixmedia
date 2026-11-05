@@ -489,7 +489,7 @@ void main() {
       expect(find.text('Please enter a post title'), findsOneWidget);
     });
 
-    testWidgets('Tapping Dashboard row in My Profile triggers navigation to Dashboard/Home overview', (tester) async {
+    testWidgets('Tapping Dashboard row in My Profile triggers navigation to Author Dashboard screen', (tester) async {
       tester.view.physicalSize = const Size(1080, 2400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(() => tester.view.resetPhysicalSize());
@@ -537,8 +537,9 @@ void main() {
       await tester.tap(dashboardFinder);
       await tester.pumpAndSettle();
 
-      // MainNavigationScreen (Tab 0: Home / Dashboard) or Home is reached
-      expect(find.byType(HomeScreen), findsOneWidget);
+      // Successfully navigated to Author Dashboard screen instead of returning to Home
+      expect(find.text('Author Dashboard'), findsOneWidget);
+      expect(find.byType(HomeScreen), findsNothing);
     });
   });
 }
