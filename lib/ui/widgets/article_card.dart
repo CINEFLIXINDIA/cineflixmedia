@@ -400,7 +400,7 @@ class ArticleCard extends StatelessWidget {
       builder: (context, constraints) {
         final cardWidth = constraints.maxWidth;
         final isTabletDevice =
-            MediaQuery.of(context).size.width >= 768 || cardWidth >= 500;
+            MediaQuery.of(context).size.width >= 700 || cardWidth >= 480;
         final isTablet = cardWidth >= 650;
         final titleSize = isTablet
             ? (cardWidth * 0.032).clamp(24.0, 34.0)
@@ -476,31 +476,47 @@ class ArticleCard extends StatelessWidget {
                         ),
                       ),
 
-                // 2. Clear Gradient Overlay (Keeps image bright and clear while ensuring text contrast)
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: isTabletDevice
-                          ? const [0.0, 0.65, 0.88, 1.0]
-                          : const [0.0, 0.40, 0.70, 1.0],
-                      colors: isTabletDevice
-                          ? const [
+                // 2. Gradient Overlay:
+                // For Mobile: Preserve existing full-bleed gradient.
+                // For iPad/Tablet: ZERO full-card overlay. Keep image 100% natural, crisp, and bright matching right-side cards.
+                // Only provide a subtle local gradient behind the bottom text block for contrast.
+                if (!isTabletDevice)
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.0, 0.40, 0.70, 1.0],
+                        colors: [
+                          Colors.transparent,
+                          Colors.transparent,
+                          Color(0x66020811),
+                          Color(0xE6020811),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: 150,
+                    child: IgnorePointer(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
                               Colors.transparent,
-                              Colors.transparent,
-                              Color(0x18000000),
-                              Color(0x45000000),
-                            ]
-                          : const [
-                              Colors.transparent,
-                              Colors.transparent,
-                              Color(0x66020811),
-                              Color(0xE6020811),
+                              Colors.black.withValues(alpha: 0.35),
                             ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
 
                 // 3. Website Content (.cf-hero-content)
                 Positioned(
