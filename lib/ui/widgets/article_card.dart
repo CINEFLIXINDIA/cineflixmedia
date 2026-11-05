@@ -399,6 +399,8 @@ class ArticleCard extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final cardWidth = constraints.maxWidth;
+        final isTabletDevice =
+            MediaQuery.of(context).size.width >= 768 || cardWidth >= 500;
         final isTablet = cardWidth >= 650;
         final titleSize = isTablet
             ? (cardWidth * 0.032).clamp(24.0, 34.0)
@@ -475,18 +477,27 @@ class ArticleCard extends StatelessWidget {
                       ),
 
                 // 2. Clear Gradient Overlay (Keeps image bright and clear while ensuring text contrast)
-                const DecoratedBox(
+                DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      stops: [0.0, 0.40, 0.70, 1.0],
-                      colors: [
-                        Colors.transparent,
-                        Colors.transparent,
-                        Color(0x66020811),
-                        Color(0xE6020811),
-                      ],
+                      stops: isTabletDevice
+                          ? const [0.0, 0.65, 0.88, 1.0]
+                          : const [0.0, 0.40, 0.70, 1.0],
+                      colors: isTabletDevice
+                          ? const [
+                              Colors.transparent,
+                              Colors.transparent,
+                              Color(0x18000000),
+                              Color(0x45000000),
+                            ]
+                          : const [
+                              Colors.transparent,
+                              Colors.transparent,
+                              Color(0x66020811),
+                              Color(0xE6020811),
+                            ],
                     ),
                   ),
                 ),
