@@ -137,7 +137,8 @@ class CategoriesScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final homeProvider = Provider.of<HomeProvider>(context);
     final categories = homeProvider.categories;
-    final isTablet = MediaQuery.of(context).size.width >= 700;
+    final isTablet = MediaQuery.of(context).size.shortestSide >= 600 &&
+        MediaQuery.of(context).size.width >= 700;
 
     return Scaffold(
       appBar: AppBar(

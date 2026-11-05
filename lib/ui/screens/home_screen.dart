@@ -480,7 +480,8 @@ class _HomeScreenState extends State<HomeScreen> {
             SliverToBoxAdapter(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final isTablet = constraints.maxWidth >= 700;
+                  final isTablet = MediaQuery.of(context).size.shortestSide >= 600 &&
+                      constraints.maxWidth >= 700;
                   final carouselHeight = isTablet ? 145.0 : 132.0;
 
                   return Container(
@@ -596,7 +597,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFeaturedSlider(List<ArticleModel> items, bool isDark) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isTablet = constraints.maxWidth >= 768;
+        final isTablet = MediaQuery.of(context).size.shortestSide >= 600 &&
+            constraints.maxWidth >= 768;
 
         if (!isTablet) {
           // Mobile Viewport: retain intact single-card swipeable carousel
@@ -1060,7 +1062,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCategoriesSection(List<CategoryModel> categories, bool isDark) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isTablet = constraints.maxWidth >= 700;
+        final isTablet = MediaQuery.of(context).size.shortestSide >= 600 &&
+            constraints.maxWidth >= 700;
         final cardsPerRow = isTablet ? 4 : 3;
         final sectionHeight = isTablet ? 122.0 : 102.0;
 
@@ -1280,7 +1283,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isTablet = constraints.maxWidth >= 700;
+        final isTablet = MediaQuery.of(context).size.shortestSide >= 600 &&
+            constraints.maxWidth >= 700;
         final cardsPerPage = isTablet
             ? (constraints.maxWidth >= 1000 ? 4 : 3)
             : 2;

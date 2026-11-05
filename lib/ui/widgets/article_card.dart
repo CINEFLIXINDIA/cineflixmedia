@@ -400,8 +400,8 @@ class ArticleCard extends StatelessWidget {
       builder: (context, constraints) {
         final cardWidth = constraints.maxWidth;
         final isTabletDevice =
-            MediaQuery.of(context).size.width >= 700 || cardWidth >= 480;
-        final isTablet = cardWidth >= 650;
+            MediaQuery.of(context).size.shortestSide >= 600;
+        final isTablet = isTabletDevice && cardWidth >= 650;
         final titleSize = isTablet
             ? (cardWidth * 0.032).clamp(24.0, 34.0)
             : 18.0;
