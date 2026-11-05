@@ -90,7 +90,7 @@ class ArticleCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Category badge
                     Row(
@@ -146,77 +146,85 @@ class ArticleCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 5),
                     // Title
                     Text(
                       article.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 14.5,
+                        fontSize: 14.0,
                         fontWeight: FontWeight.w700,
-                        height: 1.3,
+                        height: 1.25,
                         color: isDark
                             ? AppColors.darkTextPrimary
                             : AppColors.lightTextPrimary,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     // Metadata row
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.access_time_rounded,
-                          size: 13,
-                          color: isDark
-                              ? AppColors.darkTextMuted
-                              : AppColors.lightTextMuted,
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            article.timeAgo,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 11.5,
+                    LayoutBuilder(
+                      builder: (context, metaConstraints) {
+                        final showReadingTime = metaConstraints.maxWidth >= 190;
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.access_time_rounded,
+                              size: 12.5,
                               color: isDark
                                   ? AppColors.darkTextMuted
                                   : AppColors.lightTextMuted,
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '${article.readingTimeMinutes} min read',
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: isDark
-                                ? AppColors.darkTextMuted
-                                : AppColors.lightTextMuted,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.visibility_outlined,
-                          size: 13,
-                          color: isDark
-                              ? AppColors.darkTextMuted
-                              : AppColors.lightTextMuted,
-                        ),
-                        const SizedBox(width: 3),
-                        Text(
-                          article.formattedViews,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            color: isDark
-                                ? AppColors.darkTextMuted
-                                : AppColors.lightTextMuted,
-                          ),
-                        ),
-                      ],
+                            const SizedBox(width: 3.5),
+                            Flexible(
+                              child: Text(
+                                article.timeAgo,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 11.5,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextMuted,
+                                ),
+                              ),
+                            ),
+                            if (showReadingTime) ...[
+                              const SizedBox(width: 6),
+                              Text(
+                                '${article.readingTimeMinutes} min read',
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 11.5,
+                                  color: isDark
+                                      ? AppColors.darkTextMuted
+                                      : AppColors.lightTextMuted,
+                                ),
+                              ),
+                            ],
+                            const SizedBox(width: 6),
+                            Icon(
+                              Icons.visibility_outlined,
+                              size: 12.5,
+                              color: isDark
+                                  ? AppColors.darkTextMuted
+                                  : AppColors.lightTextMuted,
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              article.formattedViews,
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                color: isDark
+                                    ? AppColors.darkTextMuted
+                                    : AppColors.lightTextMuted,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -243,41 +251,48 @@ class ArticleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: article.image != null && article.image!.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: article.image!,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: isDark
-                            ? AppColors.darkSurface
-                            : const Color(0xFFF0F2F5),
-                        child: const Center(
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          _fallbackImage(isDark),
-                    )
-                  : _fallbackImage(isDark),
+            Expanded(
+              flex: 12,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  article.image != null && article.image!.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: article.image!,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                          placeholder: (context, url) => Container(
+                            color: isDark
+                                ? AppColors.darkSurface
+                                : const Color(0xFFF0F2F5),
+                            child: const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              _fallbackImage(isDark),
+                        )
+                      : _fallbackImage(isDark),
+                ],
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                     children: [
                       Flexible(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
+                            horizontal: 7,
+                            vertical: 2.5,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                           child: Text(
                             article.primaryCategoryName,
@@ -285,7 +300,7 @@ class ArticleCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: AppColors.primary,
-                              fontSize: 11,
+                              fontSize: 10.5,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -299,7 +314,7 @@ class ArticleCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.right,
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 10.5,
                             color: isDark
                                 ? AppColors.darkTextMuted
                                 : AppColors.lightTextMuted,
@@ -308,26 +323,26 @@ class ArticleCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Text(
                     article.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 13.5,
                       fontWeight: FontWeight.w700,
-                      height: 1.3,
+                      height: 1.25,
                       color: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       Icon(
                         Icons.visibility_outlined,
-                        size: 13,
+                        size: 12,
                         color: isDark
                             ? AppColors.darkTextMuted
                             : AppColors.lightTextMuted,
@@ -337,6 +352,7 @@ class ArticleCard extends StatelessWidget {
                         '${article.formattedViews} views',
                         style: TextStyle(
                           fontSize: 11,
+                          fontWeight: FontWeight.w500,
                           color: isDark
                               ? AppColors.darkTextMuted
                               : AppColors.lightTextMuted,
