@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -595,42 +596,340 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFeaturedSlider(List<ArticleModel> items, bool isDark) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isIPad = constraints.maxWidth >= 700;
-        final sliderHeight = isIPad
-            ? (constraints.maxWidth * 0.42).clamp(360.0, 480.0)
-            : 345.0;
+        final isTablet = constraints.maxWidth >= 768;
 
-        return SizedBox(
-          height: sliderHeight,
-          child: PageView.builder(
-            controller: _featuredPageController,
-            itemCount: items.length,
-            onPageChanged: (idx) => setState(() => _featuredIndex = idx),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                child: ArticleCard.hero(
-                  article: item,
-                  sliderIndex: _featuredIndex,
-                  sliderTotal: items.length,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ArticleDetailScreen(article: item),
-                      ),
-                    );
-                  },
+        if (!isTablet) {
+          // Mobile Viewport: retain intact single-card swipeable carousel
+          return SizedBox(
+            height: 345.0,
+            child: PageView.builder(
+              controller: _featuredPageController,
+              itemCount: items.length,
+              onPageChanged: (idx) => setState(() => _featuredIndex = idx),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  child: ArticleCard.hero(
+                    article: item,
+                    sliderIndex: _featuredIndex,
+                    sliderTotal: items.length,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ArticleDetailScreen(article: item),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        }
+
+        // Tablet / iPad Viewport (width >= 768): Website Split Hero Banner Design
+        return _buildTabletSplitHeroBanner(items, constraints.maxWidth, isDark);
+      },
+    );
+  }
+
+  Widget _buildTabletSplitHeroBanner(
+    List<ArticleModel> items,
+    double maxWidth,
+    bool isDark,
+  ) {
+    final bannerHeight = (maxWidth * 0.44).clamp(390.0, 440.0);
+    final sideArticles =
+        items.length > 5 ? items.sublist(1, 5) : items.sublist(1);
+
+    if (sideArticles.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: SizedBox(
+          height: bannerHeight,
+          child: ArticleCard.hero(
+            article: items.first,
+            sliderIndex: 0,
+            sliderTotal: 1,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ArticleDetailScreen(article: items.first),
                 ),
               );
             },
           ),
-        );
-      },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: SizedBox(
+        height: bannerHeight,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Left: Large Main Hero Card (Website .cf-hero matching)
+            Expanded(
+              flex: 58,
+              child: PageView.builder(
+                controller: _featuredPageController,
+                itemCount: items.length,
+                onPageChanged: (idx) => setState(() => _featuredIndex = idx),
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  return ArticleCard.hero(
+                    article: item,
+                    sliderIndex: _featuredIndex,
+                    sliderTotal: items.length,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ArticleDetailScreen(article: item),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // Right: Vertical list of next 4 mini cards (Website .cf-side-news matching)
+            Expanded(
+              flex: 42,
+              child: Column(
+                children: [
+                  for (int i = 0; i < sideArticles.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 8),
+                    Expanded(
+                      child: _buildSideMiniCard(
+                        article: sideArticles[i],
+                        actualIndex: i + 1,
+                        isSelected: _featuredIndex == (i + 1),
+                        isDark: isDark,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSideMiniCard({
+    required ArticleModel article,
+    required int actualIndex,
+    required bool isSelected,
+    required bool isDark,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          if (_featuredPageController.hasClients) {
+            _featuredPageController.animateToPage(
+              actualIndex,
+              duration: const Duration(milliseconds: 350),
+              curve: Curves.easeInOut,
+            );
+          }
+          setState(() => _featuredIndex = actualIndex);
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => ArticleDetailScreen(article: article),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          padding: const EdgeInsets.all(7),
+          decoration: BoxDecoration(
+            color: isDark
+                ? (isSelected
+                    ? const Color(0xFF0D1B2A)
+                    : const Color(0xFF050D17))
+                : (isSelected
+                    ? const Color(0xFFF1F5F9)
+                    : Colors.white),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? AppColors.primary
+                  : (isDark
+                      ? const Color(0x28FA0967)
+                      : const Color(0x18000000)),
+              width: isSelected ? 1.4 : 1.0,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 1. Thumbnail Image (.cf-side-card img)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: SizedBox(
+                  width: 104,
+                  height: double.infinity,
+                  child: article.image != null && article.image!.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: article.image!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: isDark
+                                ? const Color(0xFF0B1725)
+                                : const Color(0xFFF0F2F5),
+                            child: const Center(
+                              child: SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: isDark
+                                ? const Color(0xFF0B1725)
+                                : const Color(0xFFF0F2F5),
+                            child: const Icon(
+                              Icons.movie_creation_outlined,
+                              size: 24,
+                              color: Colors.white24,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          color: isDark
+                              ? const Color(0xFF0B1725)
+                              : const Color(0xFFF0F2F5),
+                          child: const Icon(
+                            Icons.movie_creation_outlined,
+                            size: 24,
+                            color: Colors.white24,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(width: 10),
+
+              // 2. Content Details (.cf-side-copy)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Kicker category tag (.cf-side-copy em)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFFA30849), AppColors.primary],
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        article.primaryCategoryName.toUpperCase(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 8.5,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+
+                    // Title (.cf-side-copy strong)
+                    Text(
+                      article.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: isDark
+                            ? Colors.white
+                            : AppColors.textPrimaryLight,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                        height: 1.22,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+
+                    // Meta: Reading time & Views (.cf-side-copy small)
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time_rounded,
+                          size: 11,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          '${article.readingTimeMinutes} min read',
+                          style: TextStyle(
+                            color: isDark
+                                ? const Color(0xFF9CA8B8)
+                                : Colors.black54,
+                            fontSize: 10.0,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.remove_red_eye_outlined,
+                          size: 11,
+                          color: AppColors.primary,
+                        ),
+                        const SizedBox(width: 3),
+                        Flexible(
+                          child: Text(
+                            '${article.formattedViews} Views',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: isDark
+                                  ? const Color(0xFF9CA8B8)
+                                  : Colors.black54,
+                              fontSize: 10.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

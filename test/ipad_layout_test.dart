@@ -150,6 +150,8 @@ void main() {
 
       final bookmarkProvider = BookmarkProvider(storage);
       final authProvider = AuthProvider(storage);
+      final fontSizeProvider = FontSizeProvider(storage);
+      final historyProvider = HistoryProvider(storage);
 
       await tester.pumpWidget(
         MultiProvider(
@@ -157,6 +159,8 @@ void main() {
             ChangeNotifierProvider<HomeProvider>.value(value: fakeProvider),
             ChangeNotifierProvider<BookmarkProvider>.value(value: bookmarkProvider),
             ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+            ChangeNotifierProvider<FontSizeProvider>.value(value: fontSizeProvider),
+            ChangeNotifierProvider<HistoryProvider>.value(value: historyProvider),
           ],
           child: MaterialApp(
             theme: AppTheme.darkTheme,
@@ -205,6 +209,69 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('HomeScreen on iPad (width >= 768) renders website-matching split hero banner with main card and 4 mini cards', (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final storage = await StorageService.getInstance();
+
+      await tester.binding.setSurfaceSize(const Size(834, 1194));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      final fakeProvider = MockHomeProvider(
+        breakingNews: [testArticles[0]],
+        featuredNews: testArticles, // exactly 5 articles
+        categories: testCategories,
+        latestNews: testArticles,
+        categoryNews: {
+          testCategories[0].id: [testArticles[0]],
+        },
+        storageService: storage,
+      );
+
+      final bookmarkProvider = BookmarkProvider(storage);
+      final authProvider = AuthProvider(storage);
+      final fontSizeProvider = FontSizeProvider(storage);
+      final historyProvider = HistoryProvider(storage);
+
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<HomeProvider>.value(value: fakeProvider),
+            ChangeNotifierProvider<BookmarkProvider>.value(value: bookmarkProvider),
+            ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+            ChangeNotifierProvider<FontSizeProvider>.value(value: fontSizeProvider),
+            ChangeNotifierProvider<HistoryProvider>.value(value: historyProvider),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.darkTheme,
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // 1. Verify Left Main Hero Card
+      expect(find.text('Read Full Story'), findsOneWidget);
+      expect(find.text('First Big Movie Premiere Announced for Winter Season'), findsWidgets);
+
+      // 2. Verify Right Vertical List of 4 Mini Cards
+      expect(find.text('Top Music Director Drops Chart-Topping Single'), findsOneWidget);
+      expect(find.text('Acclaimed Play Begins National Tour Across Cities'), findsOneWidget);
+      expect(find.text('Major New Thriller Breaks Global OTT Viewership Records'), findsOneWidget);
+      expect(find.text('Film Launch Gala Brings Stellar Lineup of Creators'), findsOneWidget);
+
+      // 3. Verify category kicker pills on mini cards
+      expect(find.text('MUSIC LAUNCHES'), findsWidgets);
+      expect(find.text('THEATRE & DRAMA'), findsWidgets);
+      expect(find.text('OTT RELEASES'), findsWidgets);
+      expect(find.text('FILM LAUNCHES'), findsWidgets);
+
+      // 4. Tap on a mini card to open detail screen
+      await tester.tap(find.text('Top Music Director Drops Chart-Topping Single'));
+      await tester.pumpAndSettle();
+      expect(find.byType(ArticleDetailScreen), findsOneWidget);
+    });
+
     testWidgets('HomeScreen on iPad Landscape (1194x834 & 1366x1024) handles ultra-wide layout with zero overflows', (tester) async {
       SharedPreferences.setMockInitialValues({});
       final storage = await StorageService.getInstance();
@@ -226,6 +293,8 @@ void main() {
 
       final bookmarkProvider = BookmarkProvider(storage);
       final authProvider = AuthProvider(storage);
+      final fontSizeProvider = FontSizeProvider(storage);
+      final historyProvider = HistoryProvider(storage);
 
       await tester.pumpWidget(
         MultiProvider(
@@ -233,6 +302,8 @@ void main() {
             ChangeNotifierProvider<HomeProvider>.value(value: fakeProvider),
             ChangeNotifierProvider<BookmarkProvider>.value(value: bookmarkProvider),
             ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+            ChangeNotifierProvider<FontSizeProvider>.value(value: fontSizeProvider),
+            ChangeNotifierProvider<HistoryProvider>.value(value: historyProvider),
           ],
           child: MaterialApp(
             theme: AppTheme.darkTheme,
