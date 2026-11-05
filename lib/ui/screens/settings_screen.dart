@@ -34,8 +34,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final Rect shareOrigin = (box != null && box.hasSize)
           ? (box.localToGlobal(Offset.zero) & box.size)
           : (size != null
-              ? Rect.fromLTWH(0, 0, size.width, size.height / 2)
-              : const Rect.fromLTWH(0, 0, 300, 300));
+              ? Rect.fromCenter(
+                  center: Offset(size.width * 0.5, size.height * 0.5),
+                  width: 10,
+                  height: 10,
+                )
+              : const Rect.fromLTWH(0, 0, 10, 10));
 
       final shareText =
           '${AppConstants.appName} — Stay updated with the latest Film Launches, Bollywood News, OTT Releases, and Reviews!\n\n'

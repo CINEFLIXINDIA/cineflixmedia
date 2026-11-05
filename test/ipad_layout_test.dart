@@ -480,6 +480,18 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('First Big Movie Premiere Announced for Winter Season'), findsOneWidget);
+
+      // Verify top-right share button and bottom 'Share Article' button exist and are clickable on iPad
+      final topShareBtn = find.byIcon(Icons.share_rounded);
+      expect(topShareBtn, findsOneWidget);
+      await tester.tap(topShareBtn);
+      await tester.pump();
+
+      final bottomShareBtn = find.text('Share Article');
+      expect(bottomShareBtn, findsOneWidget);
+      await tester.tap(bottomShareBtn);
+      await tester.pump();
+
       expect(tester.takeException(), isNull);
     });
   });

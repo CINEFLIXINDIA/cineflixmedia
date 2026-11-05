@@ -127,12 +127,54 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     }
   }
 
-  void _shareArticle() {
+  Future<void> _shareArticle([BuildContext? buttonContext]) async {
     if (_article == null) return;
-    Share.share(
-      '${_article!.title}\n\nRead more on CineFlix Media:\n${_article!.appDeepLink}',
-      subject: _article!.title,
-    );
+    final article = _article!;
+    final shareUrl = (article.webUrl.isNotEmpty && article.webUrl.startsWith('http'))
+        ? article.webUrl
+        : '${AppConstants.websiteUrl}/blog/${article.slug}';
+
+    Rect? shareOrigin;
+    final targetContext = (buttonContext != null && buttonContext.mounted)
+        ? buttonContext
+        : (mounted ? context : null);
+
+    if (targetContext != null) {
+      final box = targetContext.findRenderObject() as RenderBox?;
+      if (box != null && box.hasSize && box.size.width > 0 && box.size.height > 0) {
+        final mediaSize = MediaQuery.maybeSizeOf(targetContext) ??
+            (mounted ? MediaQuery.maybeSizeOf(context) : null);
+        final isFullScreenBox = mediaSize != null &&
+            box.size.width >= mediaSize.width * 0.9 &&
+            box.size.height >= mediaSize.height * 0.9;
+
+        // On iPadOS, UIPopoverPresentationController requires a discrete anchor element
+        if (!isFullScreenBox) {
+          final origin = box.localToGlobal(Offset.zero);
+          shareOrigin = origin & box.size;
+        }
+      }
+    }
+
+    // iPadOS Popover safe fallback anchor: center a small 10x10 point instead of full-screen
+    if (shareOrigin == null && mounted) {
+      final size = MediaQuery.sizeOf(context);
+      shareOrigin = Rect.fromCenter(
+        center: Offset(size.width * 0.5, size.height * 0.5),
+        width: 10,
+        height: 10,
+      );
+    }
+
+    try {
+      await Share.share(
+        '${article.title}\n\nRead more on CineFlix Media:\n$shareUrl',
+        subject: article.title,
+        sharePositionOrigin: shareOrigin,
+      );
+    } catch (e) {
+      debugPrint('[ArticleDetailScreen] Share error: $e');
+    }
   }
 
   void _openInBrowser() async {
@@ -293,15 +335,17 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
               ),
               const SizedBox(width: 8),
               // Share Button
-              CircleAvatar(
-                backgroundColor: Colors.black.withOpacity(0.4),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.share_rounded,
-                    color: Colors.white,
-                    size: 19,
+              Builder(
+                builder: (btnContext) => CircleAvatar(
+                  backgroundColor: Colors.black.withOpacity(0.4),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.share_rounded,
+                      color: Colors.white,
+                      size: 19,
+                    ),
+                    onPressed: () => _shareArticle(btnContext),
                   ),
-                  onPressed: _shareArticle,
                 ),
               ),
               const SizedBox(width: 12),
@@ -700,18 +744,20 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: _shareArticle,
-                  icon: const Icon(Icons.share, size: 18),
-                  label: const Text('Share Article'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                child: Builder(
+                  builder: (btnContext) => ElevatedButton.icon(
+                    onPressed: () => _shareArticle(btnContext),
+                    icon: const Icon(Icons.share, size: 18),
+                    label: const Text('Share Article'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
                     ),
-                    elevation: 0,
                   ),
                 ),
               ),
