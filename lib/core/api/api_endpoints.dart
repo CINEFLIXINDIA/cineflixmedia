@@ -25,8 +25,8 @@ class ApiEndpoints {
   static const String authorDeleteAccount = '${AppConstants.apiBaseUrl}/author/delete-account';
 
   static String postDetail(String slug) => '${AppConstants.apiBaseUrl}/posts/$slug';
-  static String postComments(int postId) => '${AppConstants.apiBaseUrl}/posts/$postId/comments';
-  static String postRatings(int postId) => '${AppConstants.apiBaseUrl}/posts/$postId/ratings';
+  static String postComments(dynamic postId) => '${AppConstants.apiBaseUrl}/posts/$postId/comments';
+  static String postRatings(dynamic postId) => '${AppConstants.apiBaseUrl}/posts/$postId/ratings';
   static String categoryDetail(String slug) => '${AppConstants.apiBaseUrl}/categories/$slug';
 }
 

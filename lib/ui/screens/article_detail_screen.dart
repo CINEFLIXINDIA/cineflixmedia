@@ -178,7 +178,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     }
   }
 
-  Future<void> _loadRatings(int postId) async {
+  Future<void> _loadRatings(dynamic postId) async {
     setState(() => _isLoadingRating = true);
     try {
       final auth = _getAuthProvider();
@@ -200,7 +200,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     }
   }
 
-  Future<void> _loadComments(int postId) async {
+  Future<void> _loadComments(dynamic postId) async {
     setState(() => _isLoadingComments = true);
     try {
       final comments = await _newsRepository.getComments(postId);
@@ -225,10 +225,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       return;
     }
 
+    final dynamic postIdentifier =
+        (_article!.id > 0) ? _article!.id : _article!.slug;
+
     setState(() => _isSubmittingRating = true);
     try {
       final updated = await _newsRepository.submitRating(
-        _article!.id,
+        postIdentifier,
         ratingValue,
         token: auth.token!,
       );
@@ -252,9 +255,10 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSubmittingRating = false);
+      final msg = e.toString().replaceFirst('ApiException: ', '').trim();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to submit rating: $e'),
+          content: Text('Failed to submit rating: $msg'),
           backgroundColor: Colors.redAccent,
           behavior: SnackBarBehavior.floating,
         ),
@@ -281,10 +285,13 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
       return;
     }
 
+    final dynamic postIdentifier =
+        (_article!.id > 0) ? _article!.id : _article!.slug;
+
     setState(() => _isSubmittingComment = true);
     try {
       final newComment = await _newsRepository.addComment(
-        _article!.id,
+        postIdentifier,
         text,
         token: auth.token!,
       );
@@ -302,6 +309,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         }
       });
 
+      // Synchronize comments list from server
+      _loadComments(postIdentifier);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Comment posted successfully!'),
@@ -312,9 +322,10 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSubmittingComment = false);
+      final msg = e.toString().replaceFirst('ApiException: ', '').trim();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to post comment: $e'),
+          content: Text('Failed to post comment: $msg'),
           backgroundColor: Colors.redAccent,
           behavior: SnackBarBehavior.floating,
         ),
@@ -1472,7 +1483,14 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 Expanded(
                   child: TextField(
                     controller: _commentController,
-                    maxLines: null,
+                    minLines: 1,
+                    maxLines: 4,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) {
+                      if (!_isSubmittingComment) {
+                        _onSubmitComment();
+                      }
+                    },
                     textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(
                       fontSize: 14,
@@ -1502,7 +1520,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                     : IconButton(
                         icon: const Icon(Icons.send_rounded),
                         color: AppColors.primary,
-                        onPressed: _onSubmitComment,
+                        onPressed: _isSubmittingComment ? null : _onSubmitComment,
                         tooltip: 'Post Comment',
                       ),
               ],

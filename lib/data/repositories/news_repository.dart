@@ -283,18 +283,21 @@ class NewsRepository {
     throw ApiException('Failed to parse created post response');
   }
 
-  /// Fetches comments for a post
-  Future<List<CommentModel>> getComments(int postId) async {
+  /// Fetches comments for a post (by ID or slug)
+  Future<List<CommentModel>> getComments(dynamic postId) async {
     final response = await _apiClient.get(ApiEndpoints.postComments(postId));
     final commentsList = <CommentModel>[];
-    if (response is Map &&
-        response['data'] is Map &&
-        response['data']['comments'] is List) {
-      for (final item in response['data']['comments']) {
-        if (item is Map<String, dynamic>) {
-          try {
-            commentsList.add(CommentModel.fromJson(item));
-          } catch (_) {}
+    if (response is Map && response['data'] is Map) {
+      final data = response['data'] as Map;
+      if (data['comments'] is List) {
+        for (final item in data['comments']) {
+          if (item is Map) {
+            try {
+              commentsList.add(
+                CommentModel.fromJson(Map<String, dynamic>.from(item)),
+              );
+            } catch (_) {}
+          }
         }
       }
     }
@@ -303,7 +306,7 @@ class NewsRepository {
 
   /// Posts a new comment (requires auth token)
   Future<CommentModel> addComment(
-    int postId,
+    dynamic postId,
     String content, {
     required String token,
     int? replyTo,
@@ -318,31 +321,34 @@ class NewsRepository {
       token: token,
     );
 
-    if (response is Map &&
-        response['data'] is Map &&
-        response['data']['comment'] is Map<String, dynamic>) {
-      return CommentModel.fromJson(
-        response['data']['comment'] as Map<String, dynamic>,
-      );
+    if (response is Map && response['data'] is Map) {
+      final dataMap = response['data'] as Map;
+      if (dataMap['comment'] is Map) {
+        return CommentModel.fromJson(
+          Map<String, dynamic>.from(dataMap['comment'] as Map),
+        );
+      }
     }
     throw ApiException('Failed to post comment');
   }
 
   /// Fetches ratings for a post
-  Future<RatingModel> getRatings(int postId, {String? token}) async {
+  Future<RatingModel> getRatings(dynamic postId, {String? token}) async {
     final response = await _apiClient.get(
       ApiEndpoints.postRatings(postId),
       token: token,
     );
-    if (response is Map && response['data'] is Map<String, dynamic>) {
-      return RatingModel.fromJson(response['data'] as Map<String, dynamic>);
+    if (response is Map && response['data'] is Map) {
+      return RatingModel.fromJson(
+        Map<String, dynamic>.from(response['data'] as Map),
+      );
     }
     throw ApiException('Failed to fetch ratings');
   }
 
   /// Submits or updates rating (requires auth token)
   Future<RatingModel> submitRating(
-    int postId,
+    dynamic postId,
     int rating, {
     required String token,
   }) async {
@@ -351,8 +357,10 @@ class NewsRepository {
       body: {'rating': rating},
       token: token,
     );
-    if (response is Map && response['data'] is Map<String, dynamic>) {
-      return RatingModel.fromJson(response['data'] as Map<String, dynamic>);
+    if (response is Map && response['data'] is Map) {
+      return RatingModel.fromJson(
+        Map<String, dynamic>.from(response['data'] as Map),
+      );
     }
     throw ApiException('Failed to submit rating');
   }
