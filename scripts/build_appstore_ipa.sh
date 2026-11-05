@@ -23,7 +23,11 @@ pod install
 cd ..
 
 echo "[5/5] Building Production Archive and IPA..."
-flutter build ipa --release
+if [ -f "ios/ExportOptions.plist" ]; then
+    flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
+else
+    flutter build ipa --release
+fi
 
 ARCHIVE_PATH="$PROJECT_DIR/build/ios/archive/Runner.xcarchive"
 IPA_DIR="$PROJECT_DIR/build/ios/ipa"
