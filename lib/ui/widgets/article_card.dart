@@ -442,9 +442,7 @@ class ArticleCard extends StatelessWidget {
                     ? CachedNetworkImage(
                         imageUrl: article.image!,
                         fit: BoxFit.cover,
-                        alignment: isTablet
-                            ? Alignment.centerRight
-                            : Alignment.center,
+                        alignment: Alignment.center,
                         placeholder: (context, url) => Container(
                           color: const Color(0xFF020811),
                           child: const Center(
@@ -476,33 +474,18 @@ class ArticleCard extends StatelessWidget {
                         ),
                       ),
 
-                // 2. Dual Cinematic Vignettes (Website .cf-hero matching)
-                const DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      stops: [0.0, 0.40, 0.75, 1.0],
-                      colors: [
-                        Color(0xF5020811),
-                        Color(0xD9020811),
-                        Color(0x66020811),
-                        Color(0x18020811),
-                      ],
-                    ),
-                  ),
-                ),
+                // 2. Clear Gradient Overlay (Keeps image bright and clear while ensuring text contrast)
                 const DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      stops: [0.0, 0.25, 0.60, 1.0],
+                      stops: [0.0, 0.40, 0.70, 1.0],
                       colors: [
-                        Color(0x33020811),
-                        Color(0x22020811),
-                        Color(0xB0020811),
-                        Color(0xFA020811),
+                        Colors.transparent,
+                        Colors.transparent,
+                        Color(0x66020811),
+                        Color(0xE6020811),
                       ],
                     ),
                   ),
@@ -510,8 +493,8 @@ class ArticleCard extends StatelessWidget {
 
                 // 3. Website Content (.cf-hero-content)
                 Positioned(
-                  left: isTablet ? 32 : 16,
-                  right: isTablet ? (cardWidth * 0.35).clamp(16.0, 280.0) : 16,
+                  left: isTablet ? 22 : 16,
+                  right: isTablet ? 22 : 16,
                   bottom: (sliderTotal != null && sliderTotal! > 1) ? 26 : 16,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
