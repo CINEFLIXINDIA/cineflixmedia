@@ -9,6 +9,7 @@ PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_DIR"
 
 echo "[1/5] Pulling latest origin/master..."
+git checkout -- ios/Runner.xcodeproj/project.pbxproj 2>/dev/null || true
 git pull origin master
 
 echo "[2/5] Cleaning build artifacts..."
