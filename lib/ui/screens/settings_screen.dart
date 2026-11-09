@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/services/storage_service.dart';
 import '../../providers/font_size_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../widgets/font_size_modal.dart';
@@ -19,6 +20,20 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notifications = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotificationPreference();
+  }
+
+  Future<void> _loadNotificationPreference() async {
+    final storage = await StorageService.getInstance();
+    if (!mounted) return;
+    setState(() {
+      _notifications = storage.getNotificationsEnabled();
+    });
+  }
 
   void _openWebsite() async {
     final uri = Uri.parse(AppConstants.websiteUrl);
@@ -186,8 +201,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: const Text('Real-time alerts for top Bollywood & OTT stories'),
                 value: _notifications,
                 activeThumbColor: AppColors.primary,
-                onChanged: (val) {
+                onChanged: (val) async {
                   setState(() => _notifications = val);
+                  final storage = await StorageService.getInstance();
+                  await storage.setNotificationsEnabled(val);
                 },
               ),
             ],

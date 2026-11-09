@@ -92,7 +92,7 @@ class FontSizeModal extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 11,
                               color: isSelected
-                                  ? Colors.white.withOpacity(0.9)
+                                  ? Colors.white.withValues(alpha: 0.9)
                                   : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                             ),
                           ),

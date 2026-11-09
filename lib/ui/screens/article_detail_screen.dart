@@ -600,7 +600,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
             expandedHeight: 280,
             pinned: true,
             leading: CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.4),
+              backgroundColor: Colors.black.withValues(alpha: 0.4),
               child: IconButton(
                 icon: const Icon(
                   Icons.arrow_back,
@@ -616,7 +616,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                 builder: (context, bookmarkProvider, child) {
                   final isSaved = bookmarkProvider.isBookmarked(article.id);
                   return CircleAvatar(
-                    backgroundColor: Colors.black.withOpacity(0.4),
+                    backgroundColor: Colors.black.withValues(alpha: 0.4),
                     child: IconButton(
                       icon: Icon(
                         isSaved ? Icons.bookmark : Icons.bookmark_border,
@@ -643,7 +643,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
               const SizedBox(width: 8),
               // Font Size Button
               CircleAvatar(
-                backgroundColor: Colors.black.withOpacity(0.4),
+                backgroundColor: Colors.black.withValues(alpha: 0.4),
                 child: IconButton(
                   icon: const Icon(
                     Icons.format_size_rounded,
@@ -657,7 +657,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
               // Share Button
               Builder(
                 builder: (btnContext) => CircleAvatar(
-                  backgroundColor: Colors.black.withOpacity(0.4),
+                  backgroundColor: Colors.black.withValues(alpha: 0.4),
                   child: IconButton(
                     icon: const Icon(
                       Icons.share_rounded,
@@ -706,9 +706,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withOpacity(0.6),
+                          Colors.black.withValues(alpha: 0.6),
                           Colors.transparent,
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -825,7 +825,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                       children: [
                         CircleAvatar(
                           radius: 18,
-                          backgroundColor: AppColors.primary.withOpacity(0.15),
+                          backgroundColor: AppColors.primary.withValues(alpha: 0.15),
                           child: const Icon(
                             Icons.person,
                             color: AppColors.primary,
@@ -876,7 +876,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isDark
-                            ? AppColors.darkCard.withOpacity(0.5)
+                            ? AppColors.darkCard.withValues(alpha: 0.5)
                             : AppColors.lightCard,
                         borderRadius: BorderRadius.circular(8),
                         border: const Border(
@@ -1078,7 +1078,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
@@ -1586,8 +1586,8 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
             width: double.infinity,
             decoration: BoxDecoration(
               color: isDark
-                  ? Colors.white.withOpacity(0.02)
-                  : Colors.black.withOpacity(0.01),
+                  ? Colors.white.withValues(alpha: 0.02)
+                  : Colors.black.withValues(alpha: 0.01),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -1647,7 +1647,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         // Avatar
         CircleAvatar(
           radius: 18,
-          backgroundColor: AppColors.primary.withOpacity(0.15),
+          backgroundColor: AppColors.primary.withValues(alpha: 0.15),
           backgroundImage: (comment.avatarUrl != null &&
                   comment.avatarUrl!.isNotEmpty &&
                   comment.avatarUrl!.startsWith('http'))

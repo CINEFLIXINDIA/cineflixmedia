@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
 
     <application
         android:label="@string/app_name"
@@ -21,10 +22,9 @@
             android:resource="@color/notification_color" />
 
         <!-- Google Mobile Ads (AdMob) Application ID -->
-        <!-- Replace with production App ID (e.g. ca-app-pub-4390946365152897~XXXXXXXXXX) when ready. Official test ID prevents startup crashes in testing -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-4390946365152897~8495614179" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

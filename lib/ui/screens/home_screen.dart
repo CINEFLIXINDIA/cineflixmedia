@@ -434,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   vertical: 6,
                   horizontal: 16,
                 ),
-                color: AppColors.warning.withOpacity(0.9),
+                color: AppColors.warning.withValues(alpha: 0.9),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
