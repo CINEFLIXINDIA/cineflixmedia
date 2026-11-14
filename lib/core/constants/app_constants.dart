@@ -31,6 +31,13 @@ class AppConstants {
   static const String globalBackgroundAsset =
       'assets/images/global_background.jpg';
 
+  // Support & Publisher Contact (Google Play News Policy Compliance)
+  static const String supportEmail = 'editor@cineflixmedia.in';
+  static const String supportPhone = '+91 7405878389';
+  static const String supportPhoneRaw = '+917405878389';
+  static const String registeredOfficeAddress =
+      '101, Oshiwara Sahyadri, Andheri New Link Road, Jogeshwari West, Mumbai - 400102';
+
   // Default author fallback
   static const String defaultAuthor = 'CineFlix Media Team';
 }

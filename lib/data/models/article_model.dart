@@ -15,6 +15,8 @@ class ArticleModel {
   final String? createdAt;
   final String? updatedAt;
   final String? author;
+  final String? sourceName;
+  final String? originalUrl;
   final String status;
   final int views;
   final int commentsCount;
@@ -34,6 +36,8 @@ class ArticleModel {
     this.createdAt,
     this.updatedAt,
     this.author,
+    this.sourceName,
+    this.originalUrl,
     this.status = 'published',
     this.views = 0,
     this.commentsCount = 0,
@@ -108,6 +112,30 @@ class ArticleModel {
     } else if (json['author'] is String) {
       authorName = json['author'].toString();
     }
+    if (authorName == null || authorName.trim().isEmpty || authorName == 'null') {
+      authorName = AppConstants.defaultAuthor;
+    }
+
+    // Source Attribution (Google Play News Policy Compliance)
+    String? sourceName;
+    if (json['source_name'] != null &&
+        json['source_name'].toString().trim().isNotEmpty) {
+      sourceName = json['source_name'].toString().trim();
+    } else if (json['original_source'] != null &&
+        json['original_source'].toString().trim().isNotEmpty) {
+      sourceName = json['original_source'].toString().trim();
+    } else if (json['attribution'] is Map &&
+        json['attribution']['source_name'] != null) {
+      sourceName = json['attribution']['source_name'].toString().trim();
+    } else if (json['source'] is String &&
+        json['source'].toString().trim().isNotEmpty) {
+      sourceName = json['source'].toString().trim();
+    }
+
+    String? originalUrl = json['original_url']?.toString();
+    if (originalUrl == null && json['attribution'] is Map) {
+      originalUrl = json['attribution']['original_url']?.toString();
+    }
 
     int commentsCount = 0;
     if (json['comments_count'] is int) {
@@ -149,7 +177,9 @@ class ArticleModel {
       tags: tagsList,
       createdAt: json['created_at']?.toString(),
       updatedAt: json['updated_at']?.toString(),
-      author: authorName ?? AppConstants.defaultAuthor,
+      author: authorName,
+      sourceName: sourceName,
+      originalUrl: originalUrl,
       status: json['status']?.toString() ?? 'published',
       views: int.tryParse(json['views']?.toString() ?? '0') ?? 0,
       commentsCount: commentsCount,
@@ -174,6 +204,9 @@ class ArticleModel {
       'created_at': createdAt,
       'updated_at': updatedAt,
       'author': author,
+      'source_name': sourceName,
+      'original_source': sourceName,
+      'original_url': originalUrl,
       'views': views,
       'comments_count': commentsCount,
       'average_rating': averageRating,
@@ -225,6 +258,28 @@ class ArticleModel {
     queryParameters: {'slug': slug},
   ).toString();
 
+  /// Checks whether this article originated from an auto-imported or 3rd-party source
+  bool get isThirdPartySource =>
+      sourceName != null && sourceName!.trim().isNotEmpty;
+
+  /// Alias for sourceName (nullable for original in-house articles)
+  String? get originalSource => sourceName;
+
+  /// Formatted source attribution string compliant with Google Play News policy
+  String? get sourceAttribution =>
+      isThirdPartySource ? 'Source: ${sourceName!.trim()}' : null;
+
+  /// Primary display author string based on attribution logic
+  String get displayAuthor {
+    if (isThirdPartySource) {
+      return 'Source: ${sourceName!.trim()}';
+    }
+    if (author != null && author!.trim().isNotEmpty && author != 'null') {
+      return author!.trim();
+    }
+    return AppConstants.defaultAuthor;
+  }
+
   ArticleModel copyWith({
     int? id,
     String? title,
@@ -237,6 +292,8 @@ class ArticleModel {
     String? createdAt,
     String? updatedAt,
     String? author,
+    String? sourceName,
+    String? originalUrl,
     String? status,
     int? views,
     int? commentsCount,
@@ -256,6 +313,8 @@ class ArticleModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       author: author ?? this.author,
+      sourceName: sourceName ?? this.sourceName,
+      originalUrl: originalUrl ?? this.originalUrl,
       status: status ?? this.status,
       views: views ?? this.views,
       commentsCount: commentsCount ?? this.commentsCount,

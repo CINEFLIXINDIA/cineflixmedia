@@ -9,6 +9,7 @@ import '../../core/services/storage_service.dart';
 import '../../providers/font_size_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../widgets/font_size_modal.dart';
+import 'contact_us_screen.dart';
 import 'history_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -223,6 +224,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 subtitle: const Text('cineflixmedia.in'),
                 trailing: const Icon(Icons.open_in_new, size: 18),
                 onTap: _openWebsite,
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: const Icon(Icons.support_agent_rounded, color: AppColors.primary),
+                title: const Text('Contact Us'),
+                subtitle: const Text('Editorial desk, support, phone & office'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ContactUsScreen()),
+                  );
+                },
               ),
               const Divider(height: 1),
               Builder(
